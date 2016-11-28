@@ -39,6 +39,48 @@ router.route('/bears').post(function(req,res){
 		});
 	});
 
+router.route('/bears').get(function(req,res){
+		Bear.find(function(err, data){
+			if (err) throw err;
+			res.json(data);
+		});
+	});
+
+router.route('/bears/:bear_id').get(function(req,res){
+	
+	Bear.findById(req.params.bear_id, function(err, data){
+		if (err) throw err;
+		res.json(data);
+	});
+});
+
+
+router.route('/bears/:bear_id').put(function(req, res){
+	Bear.findById(req.params.bear_id, function(err, data){
+		if (err) throw err;
+		data.name = req.body.name;
+		data.save(function(err){
+			if (err) throw err;
+			res.json({message: 'Bear Name Updated'});
+		});
+	})	
+});
+
+router.route('/bears/:bear_id').delete(function(req, res){
+	
+	Bear.findById(req.params.bear_id, function(err, data){
+		if (err) throw err;
+		data.remove(function(err){
+			if (err) throw err;
+			res.json({message: 'Bear deleted'});
+		});
+		data.save(function(err){
+			if (err) throw err;
+		});
+	});	
+
+});
+
 app.use('/api',router);
 
 app.listen(port, "0.0.0.0");
